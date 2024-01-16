@@ -1,0 +1,114 @@
+---
+title: "new"
+author: "Peter"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+x <- c(16, 2, 4, 19)
+x > 10
+```
+
+```{r}
+y <- 12
+y > 23 & y < 3
+```
+
+```{r}
+#| is or operator
+#! is not operator 
+```
+
+```{r}
+while(condition) {
+  expr
+}
+```
+
+```{r}
+ctr <- 1
+while(ctr <= 7) {
+  print(paste("ctr is set to", ctr))
+  ctr <- ctr + 1
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

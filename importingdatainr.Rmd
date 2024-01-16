@@ -1,0 +1,408 @@
+---
+title: "importing data in r"
+author: "Peter"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+read.csv("states.csv", stringsAsFactors = FALSE) #converts strings into factors if true
+```
+
+
+```{r}
+dir()
+```
+
+```{r}
+#pretend this dataset is in my working directory??
+
+pools <- read.csv("swimming_pools.csv")
+
+
+```
+
+```{r}
+#CHAT GPT TO THE RESCUEEEEE
+url <- "https://assets.datacamp.com/production/repositories/453/datasets/0badb39b50c7daf000698efbca476716db7c1a6f/swimming_pools.csv"
+
+pools_true <- read.csv(url)
+
+
+```
+
+```{r}
+pools <- read.csv("swimming_pools.csv", stringsAsFactors = FALSE) #character vectors instead of factors
+```
+
+```{r}
+#tabular file read as df, huge number of arguments
+
+read.table("states2.txt", header = TRUE, sep = "/", stringsAsFactors = FALSE) #path for file, header true means first row of text is the variable names and false by default, sep is how everything is separated (could be / or , or anything)
+```
+
+```{r}
+file_path <- "~/Documents/hotdogs.txt"
+hotdogs <- read.delim(file_path, header = FALSE)
+```
+
+```{r}
+summary(hotdogs)
+```
+
+```{r}
+colnames(hotdogs) <- c("type", "calories", "sodium") #renaming headers
+```
+
+```{r}
+path <- file.path("data", "hotdogs.txt")
+
+hotdogs2 <- read.table(path, sep = "\t", header = FALSE, col.names = c("type", "calories", "sodium"))
+
+#just an example, chat gpt made it much easier above
+```
+
+```{r}
+lily <- hotdogs[which.min(hotdogs$calories), ]
+
+tom <- hotdogs[which.max(hotdogs$sodium), ]
+
+#storing most sodium and least calories
+```
+
+```{r}
+#wrappers
+
+#read.table() - main function 
+#read.csv() - wrapper for CSV, default header is true and sep = ","
+#read.delim() - wrapper for tab delimited files, header true, sep = "\t"
+```
+
+```{r}
+#read.table("states.csv", header = TRUE, sep = ",", stringsAsFactors = TRUE)
+
+# = same things
+  
+#read.csv("states.csv", stringsAsFactors = TRUE)
+```
+
+```{r}
+?read.table
+```
+
+```{r}
+#read.csv vs read.csv2
+```
+
+
+readr package, read_csv and read_tsv
+```{r}
+#read_csv("x")      equivalent to read.csv, outputs a table, strings as factors argument isnt required
+```
+
+```{r}
+#read_tsv("x")     equivalent to read.delim, but a table, strings are always factors
+```
+
+```{r}
+#all of these^ are wrappers around read_delim(), much like the read.table() with .csv and .delim
+```
+
+practice
+```{r}
+#my way to import easily through csv file in documents
+file_potat <- "~/Documents/potatoes.csv"
+potatoes <- read_csv(file_potat)
+```
+
+```{r}
+#column names
+properties <- c("area", "temp", "size", "storage", "method", "texture", "flavor", "moistness")
+```
+
+```{r}
+#chatgpt strategy
+tsv_potat <- "~/Documents/potatoes.txt"
+potatoes_tsv <- read_tsv(tsv_potat, col_names = properties) 
+```
+
+```{r}
+#read_delim
+read.table("states2.txt", header = TRUE, sep = "/", stringsAsFactors = TRUE)
+
+read_delim("states2.txt", delim = "/")
+```
+
+col_names
+```{r}
+#col_names = FALSE means automatic generation of col names, i.e. x1, x2, x3
+
+#col_types, no specification means that it will be guessed based on first 30 rows, class of each column, chr (character), dbl (double), int (integer)
+#manually classifying column types: read_delim("x", delim = "/", col_types = "ccdd") 
+# c for character, d for double or numeric, i for integer, l for logical, _ to skip
+```
+
+
+skip and n_max
+```{r}
+#read_delim("x", delim = "\", col_names = c("a", "b"), skip = 2, n_max = 3)
+#huge files, handling stuff in chunks, skipped 2 rows then read in 3 records
+```
+
+practice
+```{r}
+#column names
+properties <- c("area", "temp", "size", "storage", "method", "texture", "flavor", "moistness")
+```
+
+```{r}
+#chatgpt strategy
+tsv_potat <- "~/Documents/potatoes.txt"
+potatoes_tsv <- read_tsv(tsv_potat, col_names = properties) 
+```
+
+skip and nmax
+```{r}
+potatoes_tsv <- read_tsv(tsv_potat, skip = 6, n_max = 5, col_names = properties) #skips observations 1-6, records 7,8,9,10,11
+```
+
+col_types
+```{r}
+potatoes_char <- read_tsv(tsv_potat, col_types = "cccccccc",col_names = properties)
+str(potatoes_char)
+```
+
+```{r}
+tsv_hotdog <- "~/Documents/hotdogs.txt"
+hotdogs_tsv <- read_tsv(tsv_hotdog, col_names = properties) 
+```
+
+```{r}
+summary(hotdogs_tsv)
+```
+
+```{r}
+fac <- col_factor(levels = c("Beef", "Meat", "poultry"))
+int <- col_integer()
+```
+
+```{r}
+hotdogs_factor <- read_tsv(tsv_hotdog, col_names = c("type", "calories", "sodium"), col_types = NULL)
+summary(hotdogs_factor)
+```
+
+
+data.table package, good for huge tables, similar to read.table, convenient
+```{r}
+freadpotat <- fread(file_potat)
+```
+
+```{r}
+freadpotat 
+```
+
+```{r}
+potatoes5 <- fread(file_potat, select = c(6, 8))
+```
+
+```{r}
+plot(potatoes5$texture, potatoes5$moistness)
+```
+
+```{r}
+ggplot(potatoes5, aes(texture, moistness)) +
+  geom_point()
+#me fucking around 
+```
+
+```{r}
+class(potatoes5)
+```
+
+
+MICROSOFT EXCEL
+```{r}
+install.packages("readxl")
+```
+
+```{r}
+#excel_sheets - list different sheets
+#read_excel - actually import data into R
+```
+
+```{r}
+excel_sheets("~/Downloads/urbanpop.xlsx")
+```
+
+```{r}
+options(scipen = 999) #to have stuff fully written out
+```
+
+
+```{r}
+urban_pop_xlsx <- read_excel("~/Downloads/urbanpop.xlsx")
+str(urban_pop_xlsx)
+```
+
+```{r}
+pop_1 <-  read_excel("~/Downloads/urbanpop.xlsx", sheet = 1)
+pop_2 <-  read_excel("~/Downloads/urbanpop.xlsx", sheet = 2)
+pop_3 <-  read_excel("~/Downloads/urbanpop.xlsx", sheet = 3)
+```
+
+```{r}
+pop_list <- list(pop_1, pop_2, pop_3)
+str(pop_list)
+```
+
+```{r}
+#automating merging lists with lapply(), easier way to do above
+```
+
+```{r}
+pop_list1 <- lapply(excel_sheets("~/Downloads/urbanpop.xlsx"), read_excel, path = "~/Downloads/urbanpop.xlsx")
+str(pop_list1)
+```
+
+```{r}
+#read_excel(path, sheet = 1 , col_names = TRUE, col_types = NULL, skip = 0) - skip gets rid of columns
+```
+
+```{r}
+cols <- c("country", paste0("year_", 1960:1966))
+pop_a <-  read_excel("~/Downloads/urbanpop.xlsx", sheet = 1)
+pop_b <-  read_excel("~/Downloads/urbanpop.xlsx", sheet = 1, col_names = cols)
+```
+
+```{r}
+summary(pop_a)
+```
+
+```{r}
+summary(pop_b)
+```
+
+```{r}
+urbanpop_sel <- read_excel("~/Downloads/urbanpop.xlsx", sheet = 2, col_names = FALSE, skip = 21)
+```
+
+```{r}
+urbanpop_sel[1,]
+```
+
+
+gdata, just supports xls, worse than the other one...
+```{r}
+install.packages("gdata")
+```
+
+```{r}
+gdatapop <- read.xls("~/Downloads/urbanpop.xlsx")
+
+str(gdatapop)
+```
+
+
+
+XLConnect, working on excel files in r and easily importable back, bridge between excel and r
+```{r}
+install.packages("remotes")
+remotes::install_github("miraisolutions/xlconnect")
+```
+
+```{r}
+install.packages("remotes")
+remotes::install_github("miraisolutions/xlconnect", ref = "development")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
